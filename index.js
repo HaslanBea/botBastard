@@ -219,3 +219,17 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(process.env.TOKEN);
+
+// === Gambiarra pro Render Grátis ===
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Bot Bastard ta online! 🔥');
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor fake rodando na porta ${PORT}`);
+});
+// === Fim da gambiarra ===
