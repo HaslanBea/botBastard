@@ -112,22 +112,23 @@ client.on('interactionCreate', async interaction => {
   // ================= COMANDO /time =================
   if (interaction.isChatInputCommand()) {
 
-    if (interaction.commandName === 'time') {
+if (interaction.commandName === 'time') {
+  await interaction.deferReply(); // Avisa o Discord: "perae que já respondo"
 
-      jogadores = {}; // reset
+  jogadores = {}; // reset
 
-      const menu = new StringSelectMenuBuilder()
-        .setCustomId('sigla')
-        .setPlaceholder('Escolha sua posição')
-        .addOptions(siglas);
+  const menu = new StringSelectMenuBuilder()
+   .setCustomId('sigla')
+   .setPlaceholder('Escolha sua posição')
+   .addOptions(siglas);
 
-      const row = new ActionRowBuilder().addComponents(menu);
+  const row = new ActionRowBuilder().addComponents(menu);
 
-      return interaction.reply({
-        content: '⚽ Criando time... escolha sua posição:',
-        components: [row]
-      });
-    }
+  return interaction.editReply({ // Troca reply por editReply
+    content: '⚽ Criando time... escolha sua posição:',
+    components: [row]
+  });
+}
   }
 
   // ================= SELECT MENUS =================
