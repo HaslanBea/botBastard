@@ -1,15 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Bot Bastard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      max-width: 400px;
+      min-height: 280px;
+    }
+    h2 { margin-top: 0; color: #38bdf8; }
+    button {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover { background: #16a34a; }
+    button:disabled { background: #475569; cursor: not-allowed; }
+    .hidden { display: none; }
+    .robo {
+      font-size: 80px;
+      display: inline-block;
+      animation: pular 0.6s infinite;
+    }
+    @keyframes pular {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
+    }
+    .sucesso {
+      color: #22c55e;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+  </style>
+</head>
 <body>
-  <h2>Reiniciar Bot Bastard</h2>
-  <button onclick="deploy()">Forçar Deploy</button>
-  <p id="status"></p>
+  <div class="card" id="login">
+    <h2>Acesso Restrito</h2>
+    <input type="password" id="senha" placeholder="Senha" style="padding:10px;width:80%;border-radius:6px;border:none;">
+    <br>
+    <button onclick="verificar()">Entrar</button>
+    <p id="erro" style="color:#ef4444;"></p>
+  </div>
+
+  <div class="card hidden" id="painel">
+    <div id="telaBotao">
+      <h2>Reiniciar Bot Bastard</h2>
+      <p>Clica pra acordar o robo do sono</p>
+      <button onclick="acordarRobo()" id="btnAcordar">Forçar Deploy</button>
+    </div>
+
+    <div id="telaSucesso" class="hidden">
+      <div class="robo">🤖</div>
+      <div class="sucesso">Robô acordou!</div>
+      <p>O Bot Bastard tá reiniciando.<br>Volta em ~1 minuto.</p>
+      <button onclick="voltar()">Ok, fechar</button>
+    </div>
+  </div>
+
+  <!-- Iframe invisível pra fazer o POST sem abrir aba -->
+  <iframe name="deployFrame" id="deployFrame" style="display:none;"></iframe>
+
   <script>
-    function deploy() {
-      document.getElementById('status').innerText = 'Reiniciando...';
-      fetch('https://api.render.com/deploy/srv-d7til2egvqtc73cpqrng?key=Lf9VLJumHhI', {method: 'POST'})
-        .then(() => document.getElementById('status').innerText = 'Deploy iniciado! Espera 1min')
-        .catch(() => document.getElementById('status').innerText = 'Erro :(');
+    const SENHA_CORRETA = "bastard123"; // TROCA ESSA SENHA
+    const DEPLOY_URL = "https://api.render.com/deploy/srv-d7til2egvqtc73cpqrng?key=E1Z1JDvVrSk"; // TROCA PELA URL NOVA
+    
+    function verificar() {
+      const senha = document.getElementById('senha').value;
+      if (senha === SENHA_CORRETA) {
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('painel').classList.remove('hidden');
+      } else {
+        document.getElementById('erro').innerText = 'Senha errada, parça';
+      }
+    }
+
+    function acordarRobo() {
+      document.getElementById('btnAcordar').disabled = true;
+      document.getElementById('btnAcordar').innerText = 'Acordando...';
+      
+      // Cria form e manda pro iframe escondido
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = DEPLOY_URL;
+      form.target = 'deployFrame';
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      // Mostra animação depois de 1s
+      setTimeout(() => {
+        document.getElementById('telaBotao').classList.add('hidden');
+        document.getElementById('telaSucesso').classList.remove('hidden');
+      }, 1000);
+    }
+
+    function voltar() {
+      document.getElementById('telaSucesso').classList.add('hidden');
+      document.getElementById('telaBotao').classList.remove('hidden');
+      document.getElementById('btnAcordar').disabled = false;
+      document.getElementById('btnAcordar').innerText = 'Forçar Deploy';
     }
   </script>
 </body>
