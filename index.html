@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Reiniciar Bot Bastard</h2>
+  <button onclick="deploy()">Forçar Deploy</button>
+  <p id="status"></p>
+  <script>
+    function deploy() {
+      document.getElementById('status').innerText = 'Reiniciando...';
+      fetch('https://api.render.com/deploy/srv-d7til2egvqtc73cpqrng?key=Lf9VLJumHhI', {method: 'POST'})
+        .then(() => document.getElementById('status').innerText = 'Deploy iniciado! Espera 1min')
+        .catch(() => document.getElementById('status').innerText = 'Erro :(');
+    }
+  </script>
+</body>
+</html>
